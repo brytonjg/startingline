@@ -322,12 +322,17 @@ a:hover {
   transition: transform 0.15s ease, filter 0.15s ease;
 }
 
-.waitlist-form button:hover {
+.waitlist-form button:hover:not(:disabled) {
   filter: brightness(1.05);
 }
 
-.waitlist-form button:active {
+.waitlist-form button:active:not(:disabled) {
   transform: translateY(1px);
+}
+
+.waitlist-form button:disabled {
+  opacity: 0.7;
+  cursor: wait;
 }
 
 .waitlist-form button:focus-visible {

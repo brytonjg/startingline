@@ -1,4 +1,13 @@
 (function () {
+  const SUPABASE_URL = "https://wboaffcwzkhkazsudjbi.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_sX8-mH50H9IpimkF_vAJvQ_LKQz8bs7";
+
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
   const revealItems = document.querySelectorAll("[data-reveal]");
 
   if ("IntersectionObserver" in window) {
@@ -24,6 +33,7 @@
 
   const form = document.getElementById("waitlist-form");
   const emailInput = document.getElementById("email");
+  const submitButton = form.querySelector('button[type="submit"]');
   const note = document.getElementById("form-note");
   const defaultNote = note.textContent;
 
@@ -37,10 +47,15 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   }
 
-  form.addEventListener("submit", function (event) {
+  function setSubmitting(isSubmitting) {
+    submitButton.disabled = isSubmitting;
+    submitButton.textContent = isSubmitting ? "Joining…" : "Join the waitlist";
+  }
+
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const email = emailInput.value.trim();
+    const email = emailInput.value.trim().toLowerCase();
 
     if (!email) {
       setNote("Add your email to join the waitlist.", "is-error");
@@ -54,10 +69,24 @@
       return;
     }
 
-    const existing = JSON.parse(localStorage.getItem("startingLineWaitlist") || "[]");
-    if (!existing.includes(email.toLowerCase())) {
-      existing.push(email.toLowerCase());
-      localStorage.setItem("startingLineWaitlist", JSON.stringify(existing));
+    setSubmitting(true);
+    setNote("Saving your spot…");
+
+    const { error } = await supabase.from("waitlist").insert({ email });
+
+    setSubmitting(false);
+
+    if (error) {
+      // Unique violation means they're already on the list.
+      if (error.code === "23505") {
+        form.reset();
+        setNote("You’re already on the list. We’ll email when spots open.", "is-success");
+        return;
+      }
+
+      console.error("Waitlist signup failed:", error);
+      setNote("Something went wrong. Please try again in a moment.", "is-error");
+      return;
     }
 
     form.reset();
