@@ -226,12 +226,12 @@ a:hover {
   animation-delay: 0.16s;
 }
 
-.hero-punch[data-hero-reveal] {
-  animation-delay: 0.28s;
+.hero-lede[data-hero-reveal] {
+  animation-delay: 0.2s;
 }
 
-.hero-lede[data-hero-reveal] {
-  animation-delay: 0.36s;
+.hero-punch[data-hero-reveal] {
+  animation-delay: 0.4s;
 }
 
 .hero h1 {
@@ -245,6 +245,14 @@ a:hover {
   max-width: 10ch;
 }
 
+.hero-lede {
+  margin: 0.75rem 0 0;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 38ch;
+  line-height: 1.45;
+}
+
 .hero-punch {
   margin: 1.5rem 0 0;
   font-family: var(--font-display);
@@ -252,14 +260,8 @@ a:hover {
   font-weight: 600;
   letter-spacing: -0.025em;
   color: var(--brand);
-}
-
-.hero-lede {
-  margin: 0.4rem 0 0;
-  font-size: 1.05rem;
-  color: var(--ink-soft);
-  max-width: 32ch;
-  line-height: 1.45;
+  max-width: 28ch;
+  line-height: 1.35;
 }
 
 .hero-cta {
